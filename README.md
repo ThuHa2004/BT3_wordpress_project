@@ -172,17 +172,20 @@ Quy trình tạo bài đăng
 
 2. Vào mục Zero Trust (cột bên trái).
 
-3. Chọn Networks -> Tunnels -> Nhấn Create a Tunnel.
+3. Chọn Networks -> Connectors -> Nhấn Create a Tunnel.
 
 4. Chọn loại Cloudflared -> Nhấn Next.
 
-5. Đặt tên Tunnel (ví dụ: wordpress-) -> Save Tunnel.
+5. Đặt tên Tunnel (ví dụ: thuha_wordpress-) -> Save Tunnel.
 
 6. Ở màn hình tiếp theo, bạn sẽ thấy một đoạn lệnh dài dành cho Docker. Hãy copy đoạn mã phía sau chữ --token. Đó chính là EYE... (một chuỗi ký tự dài)
 
-<img width="1918" height="1026" alt="image" src="https://github.com/user-attachments/assets/4b2465d8-b358-4eec-94db-d92d10f9275e" /> <br>
+<img width="1918" height="968" alt="image" src="https://github.com/user-attachments/assets/65681c35-fff2-44b1-95c8-073dba756fb1" /> <br>
 
-<img width="1913" height="991" alt="image" src="https://github.com/user-attachments/assets/2d859d01-b966-4e05-899b-915feaf37cdc" />
+<img width="1915" height="922" alt="image" src="https://github.com/user-attachments/assets/79ea7279-4738-4813-8374-ab62cab7eadc" /> <br>
+
+<img width="1919" height="955" alt="image" src="https://github.com/user-attachments/assets/5fbed703-ed2d-4d30-9984-6da3ab8eb93d" />
+
 
 ### Bước 2: Cập nhật file `docker-compose.yml`
 Mở file `docker-compose.yml` thêm dịch vụ `tunnel` vào cuối danh sách các service:
@@ -195,7 +198,9 @@ tunnel:
     environment:
       - TUNNEL_TOKEN=YOUR_TOKEN_HERE # Thay YOUR_TOKEN_HERE bằng mã bạn vừa copy
 ```
-<img width="713" height="689" alt="image" src="https://github.com/user-attachments/assets/1f4111b1-ad5c-4592-8111-19d3d89dc000" /> <br>
+
+<img width="487" height="303" alt="image" src="https://github.com/user-attachments/assets/f3c78331-409a-4964-8118-0d9b335fc479" /> <br>
+
 
 Sau khi thêm service, cập nhật lại hệ thống
 ```
@@ -210,17 +215,39 @@ Quay lại trang Cloudflare vừa lấy token
 4. Service:
 - Type: HTTP
 - URL: wordpress:80
-5. Nhấn **Save Tunnel**
-<img width="1914" height="962" alt="image" src="https://github.com/user-attachments/assets/89d70b08-a98b-410f-9a25-97364a2f245d" /> <br>
+5. Nhấn **Complete setup**
+  
+<img width="1907" height="859" alt="image" src="https://github.com/user-attachments/assets/9dd70035-846e-498c-a70a-ee151687599f" /> <br>
 
-<img width="1856" height="965" alt="image" src="https://github.com/user-attachments/assets/57501ee9-2f29-43f9-9e41-38a571f37079" />
-
-
-
+<img width="1629" height="922" alt="image" src="https://github.com/user-attachments/assets/beb62cf7-0f13-49aa-9ebe-51c85bfc6893" />
 
 
+### Kiểm tra  truy cập 
+Truy cập vào tên miền: 
+```
+wordpress-project.tranthithuha.id.vn
+```
 
+<img width="1913" height="1023" alt="image" src="https://github.com/user-attachments/assets/1e8f6d1f-9cb1-4d9d-b179-e25491110a8f" /> <br>
 
+<img width="1914" height="1023" alt="image" src="https://github.com/user-attachments/assets/ef51e4a1-8f82-41a3-b2ca-9177e60d0401" /> 
+
+---
+
+# NHẬN XÉT VỀ VIỆC SỬ DỤNG MÃ NGUỒN MỞ
+
+## 1. Sử dụng mã nguồn mở WordPress
+- **Tính tiện dụng:** WordPress là một hệ quản trị nội dung (CMS) cực kỳ mạnh mẽ và trực quan. Sau khi thiết lập xong hạ tầng, việc quản trị nội dung như viết bài giới thiệu bản thân hay ngành học tại TNUT trở nên rất dễ dàng nhờ trình soạn thảo khối (Gutenberg), không đòi hỏi kỹ năng lập trình web chuyên sâu.
+- **Khả năng tùy biến:*** Hệ thống cho phép chèn đa phương tiện (hình ảnh, âm thanh, video nhúng từ YouTube) một cách linh hoạt, giúp bài viết sinh động và chuyên nghiệp hơn hẳn so với việc viết code thuần
+
+## 2. Quá trình triển khai trên Docker
+- Nhờ Docker Compose, việc quản lý ba dịch vụ (MariaDB, phpMyAdmin, WordPress) trở nên đồng nhất.
+- **Tính đóng gói:** Việc sử dụng Docker giúp môi trường chạy web ổn định, không bị xung đột với các ứng dụng khác trên hệ điều hành Ubuntu của máy chủ.
+
+## 3. Tài nguyên máy chủ 
+- **RAM/CPU**: Qua theo dõi thực tế, hệ thống tiêu tốn khoảng 500MB - 800MB RAM khi ở trạng thái nghỉ và có thể tăng lên khi xử lý các tác vụ nặng trong trang quản trị. Đây là mức sử dụng tài nguyên chấp nhận được đối với các dòng máy chủ ảo (VPS) hoặc máy ảo VMware phổ thông.
+
+## ==> Việc kết hợp giữa Docker, WordPress và Cloudflare Tunnel là một giải pháp hiện đại, chuẩn quy trình DevOps. Dù quá trình cài đặt ban đầu có phát sinh nhiều lỗi về cấu hình tên miền và quyền truy cập file, nhưng qua đó đã giúp sinh viên hiểu sâu hơn về cơ chế hoạt động của Web Server, quản trị hệ thống Linux và hạ tầng mạng Internet.
 
 
 

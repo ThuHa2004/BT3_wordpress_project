@@ -167,6 +167,53 @@ Quy trình tạo bài đăng
 ---
 
 ## Sử dụng Claudflare tunnel để public web 
+### Bước 1: Lấy Token từ Cloudflare 
+1. Đăng nhập vào Cloudflare Dashboard.
+
+2. Vào mục Zero Trust (cột bên trái).
+
+3. Chọn Networks -> Tunnels -> Nhấn Create a Tunnel.
+
+4. Chọn loại Cloudflared -> Nhấn Next.
+
+5. Đặt tên Tunnel (ví dụ: wordpress-) -> Save Tunnel.
+
+6. Ở màn hình tiếp theo, bạn sẽ thấy một đoạn lệnh dài dành cho Docker. Hãy copy đoạn mã phía sau chữ --token. Đó chính là EYE... (một chuỗi ký tự dài)
+
+<img width="1918" height="1026" alt="image" src="https://github.com/user-attachments/assets/4b2465d8-b358-4eec-94db-d92d10f9275e" /> <br>
+
+<img width="1913" height="991" alt="image" src="https://github.com/user-attachments/assets/2d859d01-b966-4e05-899b-915feaf37cdc" />
+
+### Bước 2: Cập nhật file `docker-compose.yml`
+Mở file `docker-compose.yml` thêm dịch vụ `tunnel` vào cuối danh sách các service:
+```
+tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: thuha_cloudflare_tunnel
+    restart: always
+    command: tunnel --no-autoupdate run --token YOUR_TOKEN_HERE
+    environment:
+      - TUNNEL_TOKEN=YOUR_TOKEN_HERE # Thay YOUR_TOKEN_HERE bằng mã bạn vừa copy
+```
+<img width="713" height="689" alt="image" src="https://github.com/user-attachments/assets/1f4111b1-ad5c-4592-8111-19d3d89dc000" /> <br>
+
+Sau khi thêm service, cập nhật lại hệ thống
+```
+docker compose up -d
+```
+
+### Bước 3: Cấu hình public Hostname 
+Quay lại trang Cloudflare vừa lấy token
+1. Nhấn **Next*** để sang phần **Public Hostname**
+2. Subdomain: Nhập tên subdomain muốn tạo
+3. Domain: Chọn tên miền đang có trên cloudflare
+4. Service:
+- Type: HTTP
+- URL: wordpress:80
+5. Nhấn **Save Tunnel**
+<img width="1914" height="962" alt="image" src="https://github.com/user-attachments/assets/89d70b08-a98b-410f-9a25-97364a2f245d" /> <br>
+
+<img width="1856" height="965" alt="image" src="https://github.com/user-attachments/assets/57501ee9-2f29-43f9-9e41-38a571f37079" />
 
 
 
